@@ -6,6 +6,7 @@ docker-build:
     - docker:dind
   variables:
     DOCKER_IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+    LATEST_IMAGE_NAME: $CI_REGISTRY_IMAGE:latest
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   # Build and push the Docker image only if a tag is pushed
@@ -16,6 +17,10 @@ docker-build:
       if [[ -n "$CI_COMMIT_TAG" ]]; then
         docker tag "$DOCKER_IMAGE_NAME" "$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
         docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
+        
+        # Update the latest tag
+        docker tag "$DOCKER_IMAGE_NAME" "$LATEST_IMAGE_NAME"
+        docker push "$LATEST_IMAGE_NAME"
       fi
   # Run this job only if a tag is present
   rules:
