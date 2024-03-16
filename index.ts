@@ -26,12 +26,12 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 // Route to get current store state
-app.get('/store-state', (req: Request, res: Response) => {
+app.get('/ssl-open', (req: Request, res: Response) => {
     res.json(storeState);
 });
 
 // Route to toggle store state with random generated UUID
-app.get('/toggle-store-state/:uuid', (req: Request, res: Response) => {
+app.get('/switch-ssl/:uuid', (req: Request, res: Response) => {
     const uuid = req.params.uuid;
     if (uuid === storeState.uuid) {
         storeState.isOpen = !storeState.isOpen;
@@ -44,10 +44,10 @@ app.get('/toggle-store-state/:uuid', (req: Request, res: Response) => {
 // Generate a UUID for the store state toggle
 storeState.uuid = uuidv4();
 
-// Log the valid UUID to the console
-console.log(`Valid UUID for toggling store state: ${storeState.uuid}`);
+// Log the link to toggle store state
+const baseURL = `http://localhost:${port}`;
+console.log(`To toggle store state, use: ${baseURL}/switch-ssl/${storeState.uuid}`);
 
 app.listen(port, () => {
-    console.log(`Server is listening at http://localhost:${port}`);
+    console.log(`Server is listening at ${baseURL}`);
 });
-
