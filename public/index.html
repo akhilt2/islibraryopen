@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Store State Viewer</title>
+    <title>IS SSL OPEN</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -27,27 +27,43 @@
             font-size: 18px;
             margin-bottom: 10px;
         }
-        #store-state {
+        #ssl-open {
             font-weight: bold;
             color: #007bff;
+        }
+
+        /* Responsive Styling */
+        @media only screen and (max-width: 600px) {
+            .container {
+                margin: 20px;
+                padding: 10px;
+            }
+            h1 {
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+            p {
+                font-size: 16px;
+                margin-bottom: 8px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Store State Viewer</h1>
-        <p>Current Store State: <span id="store-state"></span></p>
+        <h1>IS SSL OPEN</h1>
+        <p>Current SSL State: <span id="ssl-open"></span></p>
     </div>
 
     <script>
         // Function to fetch and display store state
         function fetchStoreState() {
             // Make a GET request to fetch the store state from the server
-            fetch('/store-state')
+            fetch('/ssl-open')
                 .then(response => response.json())
                 .then(data => {
                     // Update the HTML content with the received store state
-                    const storeStateElement = document.getElementById('store-state');
+                    const storeStateElement = document.getElementById('ssl-open');
                     storeStateElement.textContent = data.isOpen ? 'Open' : 'Closed';
                 })
                 .catch(error => {
