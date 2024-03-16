@@ -10,9 +10,9 @@ SERVER_ADDRESS="$1"
 
 # Function to toggle store state
 toggle_state() {
-    current_state=$(curl -s "$SERVER_ADDRESS/store-state" | jq -r '.isOpen')
+    current_state=$(curl -s "$SERVER_ADDRESS/live" | jq -r '.isOpen')
     new_state=$(( !current_state ))
-    curl -X PUT -H "Content-Type: application/json" -d "{\"isOpen\":$new_state}" "$SERVER_ADDRESS/store-state"
+    curl -X PUT -H "Content-Type: application/json" -d "{\"isOpen\":$new_state}" "$SERVER_ADDRESS/live"
     echo "Store state toggled. New state: $new_state"
 }
 

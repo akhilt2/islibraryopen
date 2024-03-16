@@ -1,0 +1,7 @@
+version: '3.8'
+
+services:
+  store-state-server:
+    image: registry.gitlab.com/tellmey/issslopen:latest
+    ports:
+      - "3000:3000"

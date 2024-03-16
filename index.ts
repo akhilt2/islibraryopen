@@ -20,12 +20,12 @@ let storeState: StoreState = {
 
 // Define routes
 // Route to get current store state
-app.get('/store-state', (req: Request, res: Response) => {
+app.get('/live', (req: Request, res: Response) => {
     res.json(storeState);
 });
 
 // Route to update store state
-app.put('/store-state', (req: Request, res: Response) => {
+app.put('/live', (req: Request, res: Response) => {
     // Assume the request body contains { isOpen: true } or { isOpen: false }
     const newState: StoreState = req.body;
     if (newState.hasOwnProperty('isOpen')) {
