@@ -1,42 +1,52 @@
-// Import required modules
 import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
+import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
 
-// Create Express app
 const app = express();
-const port = 3000; // You can change this to any port you prefer
+const port = 3000;
 
-// Middleware
 app.use(bodyParser.json());
 
-// Store state
 interface StoreState {
     isOpen: boolean;
+    uuid?: string; // Added optional uuid property
 }
 
 let storeState: StoreState = {
-    isOpen: 0// Initially closed
+    isOpen: false // Initially closed
 };
 
-// Define routes
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Route to serve the index.html file
+app.get('/', (req: Request, res: Response) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 // Route to get current store state
-app.get('/live', (req: Request, res: Response) => {
+app.get('/store-state', (req: Request, res: Response) => {
     res.json(storeState);
 });
 
-// Route to update store state
-app.put('/live', (req: Request, res: Response) => {
-    // Assume the request body contains { isOpen: true } or { isOpen: false }
-    const newState: StoreState = req.body;
-    if (newState.hasOwnProperty('isOpen')) {
-        storeState.isOpen = newState.isOpen;
-        res.json({ message: 'Store state updated successfully' });
+// Route to toggle store state with random generated UUID
+app.get('/toggle-store-state/:uuid', (req: Request, res: Response) => {
+    const uuid = req.params.uuid;
+    if (uuid === storeState.uuid) {
+        storeState.isOpen = !storeState.isOpen;
+        res.json({ message: 'Store state toggled successfully' });
     } else {
-        res.status(400).json({ error: 'Invalid request body' });
+        res.status(404).json({ error: 'Invalid UUID' });
     }
 });
 
-// Start the server
+// Generate a UUID for the store state toggle
+storeState.uuid = uuidv4();
+
+// Log the valid UUID to the console
+console.log(`Valid UUID for toggling store state: ${storeState.uuid}`);
+
 app.listen(port, () => {
     console.log(`Server is listening at http://localhost:${port}`);
 });
