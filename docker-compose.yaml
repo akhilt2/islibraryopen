@@ -3,7 +3,7 @@ version: '3.8'
 services:
   ssl-open-server:
     image: registry.gitlab.com/tellmey/issslopen:latest
+    volumes:
+      - ./.env:/usr/src/app/.env
     ports:
       - "3000:3000"
-    volumes:
-      - .env:/app/.env
