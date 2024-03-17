@@ -22,17 +22,17 @@ let storeState: StoreState = {
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Route to serve the index.html file
-app.get('/', (req: Request, res: Response) => {
+app.get('/sslopen', (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Route to get current store state
-app.get('/ssl-open', (req: Request, res: Response) => {
+app.get('/sslopen/ssl-open', (req: Request, res: Response) => {
     res.json(storeState);
 });
 
 // Route to toggle store state with the provided token
-app.get('/switch-ssl/:token', (req: Request, res: Response) => {
+app.get('/sslopen/switch-ssl/:token', (req: Request, res: Response) => {
     const token = req.params.token;
     const secretToken = process.env.SECRET_TOKEN;
 
@@ -50,6 +50,6 @@ app.get('/switch-ssl/:token', (req: Request, res: Response) => {
 
 // Start the server
 app.listen(port, () => {
-    console.log(`Server is listening at http://localhost:${port}`);
+    console.log(`Server is listening at http://localhost:${port}/sslopen`);
 });
 
