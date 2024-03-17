@@ -21,7 +21,7 @@
   <body id="ssl-open">
     <script>
       function fetchStoreState() {
-        fetch("/ssl-open")
+        fetch("/sslopen/ssl-open")
           .then((response) => response.json())
           .then((data) => {
             const storeStateElement = document.getElementById("ssl-open");
