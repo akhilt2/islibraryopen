@@ -1,6 +1,9 @@
 import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
+import dotenv from 'dotenv';
+
+dotenv.config(); // Load environment variables from .env file
 
 const app = express();
 const port = 3000;
@@ -46,29 +49,7 @@ app.get('/switch-ssl/:token', (req: Request, res: Response) => {
 });
 
 // Start the server
-const startServer = () => {
-    if (!process.env.SECRET_TOKEN) {
-        console.error('Please provide a secret token using the SECRET_TOKEN environment variable.');
-        process.exit(1);
-    }
-    
-    app.listen(port, () => {
-        console.log(`Server is listening at http://localhost:${port}`);
-    });
-};
+app.listen(port, () => {
+    console.log(`Server is listening at http://localhost:${port}`);
+});
 
-// Check if a secret token is provided
-if (process.env.SECRET_TOKEN) {
-    startServer();
-} else {
-    const readline = require('readline').createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
-
-    readline.question('Please provide the secret token: ', token => {
-        process.env.SECRET_TOKEN = token.trim();
-        readline.close();
-        startServer();
-    });
-}

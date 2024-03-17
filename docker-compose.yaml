@@ -5,3 +5,5 @@ services:
     image: registry.gitlab.com/tellmey/issslopen:latest
     ports:
       - "3000:3000"
+    volumes:
+      - .env:/app/.env
