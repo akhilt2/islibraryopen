@@ -1,7 +1,6 @@
 import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
-import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
 const port = 3000;
@@ -10,7 +9,6 @@ app.use(bodyParser.json());
 
 interface StoreState {
     isOpen: boolean;
-    uuid?: string; // Added optional uuid property
 }
 
 let storeState: StoreState = {
@@ -30,24 +28,47 @@ app.get('/ssl-open', (req: Request, res: Response) => {
     res.json(storeState);
 });
 
-// Route to toggle store state with random generated UUID
-app.get('/switch-ssl/:uuid', (req: Request, res: Response) => {
-    const uuid = req.params.uuid;
-    if (uuid === storeState.uuid) {
+// Route to toggle store state with the provided token
+app.get('/switch-ssl/:token', (req: Request, res: Response) => {
+    const token = req.params.token;
+    const secretToken = process.env.SECRET_TOKEN;
+
+    if (!secretToken) {
+        return res.status(500).json({ error: 'Secret token is not set' });
+    }
+
+    if (token === secretToken) {
         storeState.isOpen = !storeState.isOpen;
         res.json({ message: 'Store state toggled successfully' });
     } else {
-        res.status(404).json({ error: 'Invalid UUID' });
+        res.status(403).json({ error: 'Access denied' });
     }
 });
 
-// Generate a UUID for the store state toggle
-storeState.uuid = uuidv4();
+// Start the server
+const startServer = () => {
+    if (!process.env.SECRET_TOKEN) {
+        console.error('Please provide a secret token using the SECRET_TOKEN environment variable.');
+        process.exit(1);
+    }
+    
+    app.listen(port, () => {
+        console.log(`Server is listening at http://localhost:${port}`);
+    });
+};
 
-// Log the link to toggle store state
-const baseURL = `http://localhost:${port}`;
-console.log(`To toggle store state, use: ${baseURL}/switch-ssl/${storeState.uuid}`);
+// Check if a secret token is provided
+if (process.env.SECRET_TOKEN) {
+    startServer();
+} else {
+    const readline = require('readline').createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
 
-app.listen(port, () => {
-    console.log(`Server is listening at ${baseURL}`);
-});
+    readline.question('Please provide the secret token: ', token => {
+        process.env.SECRET_TOKEN = token.trim();
+        readline.close();
+        startServer();
+    });
+}
