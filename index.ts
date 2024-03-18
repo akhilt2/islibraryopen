@@ -1,55 +1,71 @@
-import express, { Request, Response } from 'express';
-import bodyParser from 'body-parser';
-import path from 'path';
-import dotenv from 'dotenv';
+import express, { Request, Response } from 'express'
+import path from 'path'
+import dotenv from 'dotenv'
 
-dotenv.config(); // Load environment variables from .env file
+dotenv.config() // Load environment variables from .env file
 
-const app = express();
-const port = 3000;
+function parseAdminEnv(str: String) {
+	if (!str) return null
 
-app.use(bodyParser.json());
-
-interface StoreState {
-    isOpen: boolean;
+	try {
+		const admins: any = {}
+		str.split(',').forEach((item) => {
+			const temp = item.split(':')
+			admins[temp[1]] = temp[0]
+		})
+		return admins
+	} catch (err) {
+		console.error(err)
+		throw new Error('ADMINS env not set. Format: admin1name:token1,admin2name:token2')
+	}
 }
 
-let storeState: StoreState = {
-    isOpen: false // Initially closed
-};
+const port = process.env.PORT ?? 3000
+const admins = parseAdminEnv(process.env.ADMINS ?? '')
 
-// Serve static files from the 'public' directory
-app.use(express.static(path.join(__dirname, 'public')));
+const app = express()
+app.use(express.json())
+app.use(express.static(path.join(__dirname, 'public')))
+
+interface SslStatus {
+	isOpen: boolean
+	currAdmin: String
+	lastUpdated: String
+}
+
+const sslStatus: SslStatus = {
+	isOpen: false, // Initially closed
+	currAdmin: 'SSL Admin',
+	lastUpdated: new Date().toJSON(),
+}
 
 // Route to serve the index.html file
 app.get('/sslopen', (req: Request, res: Response) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+	res.sendFile(path.join(__dirname, 'public', 'index.html'))
+})
 
 // Route to get current store state
-app.get('/sslopen/ssl-open', (req: Request, res: Response) => {
-    res.json(storeState);
-});
+app.get('/sslopen/status', (req: Request, res: Response) => {
+	res.json({ sslStatus: sslStatus })
+})
 
 // Route to toggle store state with the provided token
 app.get('/sslopen/switch-ssl/:token', (req: Request, res: Response) => {
-    const token = req.params.token;
-    const secretToken = process.env.SECRET_TOKEN;
+	const token = req.params.token
 
-    if (!secretToken) {
-        return res.status(500).json({ error: 'Secret token is not set' });
-    }
+	const currAdmin = admins[token]
 
-    if (token === secretToken) {
-        storeState.isOpen = !storeState.isOpen;
-        res.json({ message: 'Store state toggled successfully' });
-    } else {
-        res.status(403).json({ error: 'Access denied' });
-    }
-});
+	if (!currAdmin) {
+		res.status(403).json({ error: 'Invalid token' })
+	} else {
+		sslStatus.isOpen = !sslStatus.isOpen
+		sslStatus.currAdmin = currAdmin
+		sslStatus.lastUpdated = new Date().toJSON()
+		res.json({ message: 'Store state toggled successfully' })
+	}
+})
 
 // Start the server
 app.listen(port, () => {
-    console.log(`Server is listening at http://localhost:${port}/sslopen`);
-});
-
+	console.log(`Server is listening at http://localhost:${port}/sslopen`)
+})

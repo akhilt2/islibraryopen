@@ -22,7 +22,7 @@ git clone <repository_url>
 cp .env.example .env
 ```
 
-3. Set your custom token ID inside the `SECRET_TOKEN` field in the `.env` file.
+3. The `ADMINS` env var should have a format of `adminname1:token1,adminname2:token2` etc.
 
 ### Running the Application
 
@@ -51,7 +51,7 @@ The service will be accessible at port 3000.
 To update the state, send a GET request to the following URL:
 
 ```
-$sitename/sslopen/switch-ssl/SECRET_TOKEN
+$sitename/sslopen/switch-ssl/:admintoken
 ```
 
-Replace `$sitename` with the actual domain or IP address where the service is hosted. Ensure that the `SECRET_TOKEN` matches the one set in the `.env` file. Admins should keep the token secure.
+Replace `$sitename` with the actual domain or IP address where the service is hosted. Ensure that the `:admintoken` matches the one set in the `.env` file. Admins should keep the token secure.
