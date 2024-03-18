@@ -43,6 +43,10 @@ Alternatively, you can use Docker Compose to run the application:
 ```bash
 docker-compose up -d
 ```
+To Update the Image run:
+```bash
+docker-compose pull && docker-compose up -d
+```
 
 The service will be accessible at port 3000.
 
