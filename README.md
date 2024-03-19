@@ -52,10 +52,11 @@ The service will be accessible at port 3000.
 
 ## Updating the State
 
-To update the state, send a GET request to the following URL:
+To update the state, open this page with a basic form and hit submit after entering tokens defined in .env
 
 ```
-$sitename/sslopen/switch-ssl/:admintoken
+$sitename/sslopen/edit/:token
+
 ```
 
 Replace `$sitename` with the actual domain or IP address where the service is hosted. Ensure that the `:admintoken` matches the one set in the `.env` file. Admins should keep the token secure.
