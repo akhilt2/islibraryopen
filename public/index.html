@@ -163,7 +163,7 @@
           console.log(sslStatus);
 
           admin.innerText = sslStatus.currAdmin;
-          lastUpdate.innerText = `Last updated: ${formatDate(sslStatus.lastUpdated)}`;
+			lastUpdate.innerText = sslStatus?.isOpen?  `Lab is open till ${formatDate(sslStatus.openTill)}` : `Last updated: ${formatDate(sslStatus.lastUpdated)}`;
           adminWrapper.style.display = 'flex';
 
           body.style.background = sslStatus?.isOpen

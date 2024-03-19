@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Token and Time Chooser</title>
+</head>
+<body>
+
+<h2>Token and Time Chooser Form</h2>
+
+<form method="post">
+  <label for="time">Choose a closing time:</label><br>
+  <input type="datetime-local" id="time" name="opentill"><br><br>
+  <input type="submit" value="Submit">
+</form>
+</body>
+<script>
+// Get the current date and time in the format expected by datetime-local input
+const currentDate = new Date();
+const currentDateTimeString = currentDate.toISOString().slice(0, 16); // Remove seconds and timezone info
+
+// Set the value of the datetime-local input to the current date and time
+document.getElementById("time").value = currentDateTimeString;
+</script>
+</html>
