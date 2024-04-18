@@ -1,4 +1,4 @@
-# issslopen
+# islibraryopen
 
 This project utilizes [Bun](https://bun.sh), a fast all-in-one JavaScript runtime.
 
@@ -55,7 +55,7 @@ The service will be accessible at port 3000.
 To update the state, open this page with a basic form and hit submit after entering tokens defined in .env
 
 ```
-$sitename/sslopen/edit/:token
+$sitename/libraryopen/edit/:token
 
 ```
 

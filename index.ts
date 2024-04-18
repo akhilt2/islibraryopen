@@ -28,7 +28,7 @@ app.use(express.json())
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(express.urlencoded())
 
-interface SslStatus {
+interface LibraryStatus {
 	isOpen: boolean
 	currAdmin: String
 	lastUpdated: String
@@ -36,30 +36,30 @@ interface SslStatus {
 //	openTill: Date
 }
 
-const sslStatus: SslStatus = {
+const libraryStatus: LibraryStatus = {
 	isOpen: false, // Initially closed
-	currAdmin: 'SSL Admin',
+	currAdmin: 'Library Admin',
 	lastUpdated: new Date().toJSON(),
 	openTill: new Date().toJSON()
 }
 
 // Route to serve the index.html file
-app.get('/sslopen', (req: Request, res: Response) => {
+app.get('/libraryopen', (req: Request, res: Response) => {
 	res.sendFile(path.join(__dirname, 'public', 'index.html'))
 })
 
 // Route to get current store state
-app.get('/sslopen/status', (req: Request, res: Response) => {
+app.get('/libraryopen/status', (req: Request, res: Response) => {
 	// if current time is more than 
 	const now = new Date().toJSON();
-	sslStatus.isOpen = sslStatus.openTill >= now
-	console.log(sslStatus)
-	res.json({ sslStatus: sslStatus })
+	libraryStatus.isOpen = libraryStatus.openTill >= now
+	console.log(libraryStatus)
+	res.json({ libraryStatus: libraryStatus })
 })
 
 // Route to toggle store state with the provided token
 
-app.get('/sslopen/edit/:token', (req, res) => {
+app.get('/libraryopen/edit/:token', (req, res) => {
     // Assuming the HTML file is located in the same directory as the server file
     const token= req.params.token;
 
@@ -75,7 +75,7 @@ app.get('/sslopen/edit/:token', (req, res) => {
     res.sendFile(filePath);
 });
 
-app.post('/sslopen/edit/:token', (req,res) => {
+app.post('/libraryopen/edit/:token', (req,res) => {
     const token= req.params.token;
 
     if (!token) {
@@ -87,13 +87,13 @@ app.post('/sslopen/edit/:token', (req,res) => {
         return res.status(403).json({ error: 'Invalid token' });
     }
 	console.log(req.body)
-	sslStatus.openTill = req.body.opentill;
-    sslStatus.currAdmin = currAdmin;
-    sslStatus.lastUpdated = new Date().toJSON();
+	libraryStatus.openTill = req.body.opentill;
+    libraryStatus.currAdmin = currAdmin;
+    libraryStatus.lastUpdated = new Date().toJSON();
 
-	res.redirect('/sslopen')
+	res.redirect('/libraryopen')
 })
 // Start the server
 app.listen(port, () => {
-	console.log(`Server is listening at http://localhost:${port}/sslopen`)
+	console.log(`Server is listening at http://localhost:${port}/libraryopen`)
 })
