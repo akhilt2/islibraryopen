@@ -87,7 +87,7 @@ app.post('/libraryopen/edit/:token', (req,res) => {
         return res.status(403).json({ error: 'Invalid token' });
     }
 	console.log(req.body)
-	libraryStatus.openTill = req.body.opentill;
+	libraryStatus.openTill = new Date(req.body.opentill).toJSON();
     libraryStatus.currAdmin = currAdmin;
     libraryStatus.lastUpdated = new Date().toJSON();
 

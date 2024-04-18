@@ -1,6 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Token and Time Chooser</title>
@@ -17,10 +14,16 @@
 </body>
 <script>
 // Get the current date and time in the format expected by datetime-local input
-const currentDate = new Date();
+function convertUTCDateToLocalDate(date) {
+    newDate = new Date(date.getTime());
+    offset = newDate.getTimezoneOffset();
+    return new Date(newDate.getTime() - offset * 60000);   
+}
+const currentDate = convertUTCDateToLocalDate(new Date());
 const currentDateTimeString = currentDate.toISOString().slice(0, 16); // Remove seconds and timezone info
 
 // Set the value of the datetime-local input to the current date and time
 document.getElementById("time").value = currentDateTimeString;
 </script>
 </html>
+
